@@ -89,28 +89,58 @@
   "title": "Naši koně",
   "items": [
    {
-    "name": "[Jméno koně]",
-    "info": "[Plemeno · sportovní / rekreační]",
-    "photo": "",
-    "alt": ""
+    "name": "𝐅𝐈𝐕𝐄 𝐒𝐓𝐀𝐑 𝐃𝐄𝐗𝐓𝐄𝐑 ",
+    "info": "Belgian Warmblood",
+    "photo": "img/foto-mvv711gy.jpg",
+    "alt": "𝐅𝐈𝐕𝐄 𝐒𝐓𝐀𝐑 𝐃𝐄𝐗𝐓𝐄𝐑 "
    },
    {
-    "name": "[Jméno koně]",
-    "info": "[Plemeno · sportovní / rekreační]",
-    "photo": "",
-    "alt": ""
+    "name": "𝐓𝐈𝐓𝐀́𝐍",
+    "info": "Arabian",
+    "photo": "img/foto-mvv713by.jpg",
+    "alt": "𝐓𝐈𝐓𝐀́𝐍"
    },
    {
-    "name": "[Jméno koně]",
-    "info": "[Plemeno · sportovní / rekreační]",
-    "photo": "",
-    "alt": ""
+    "name": "𝐄𝐋 𝐖𝐄𝐒𝐓 𝐒𝐏𝐈𝐃𝐄𝐑𝐌𝐀𝐍 ",
+    "info": "American Paint Horse",
+    "photo": "img/foto-mvv71593.jpg",
+    "alt": "𝐄𝐋 𝐖𝐄𝐒𝐓 𝐒𝐏𝐈𝐃𝐄𝐑𝐌𝐀𝐍 "
    },
    {
-    "name": "[Jméno pony]",
-    "info": "[Plemeno · pro děti]",
-    "photo": "",
-    "alt": ""
+    "name": "𝐍𝐄𝐒𝐒𝐈𝐄",
+    "info": "Hucul x IC",
+    "photo": "img/foto-mvv71774.jpg",
+    "alt": "𝐍𝐄𝐒𝐒𝐈𝐄"
+   },
+   {
+    "name": "𝐖𝐢𝐥𝐝 𝐖𝐢𝐥𝐥𝐢𝐚𝐦 𝐒𝐞𝐜𝐫𝐞𝐭 ",
+    "info": "Mustang ",
+    "photo": "img/foto-mvv71ax5.jpg",
+    "alt": "𝐖𝐢𝐥𝐝 𝐖𝐢𝐥𝐥𝐢𝐚𝐦 𝐒𝐞𝐜𝐫𝐞𝐭 "
+   },
+   {
+    "name": "𝐐𝐔𝐈𝐂𝐊 𝐒𝐍𝐎𝐖𝐒𝐓𝐎𝐑𝐌 ",
+    "info": "English Thoroughbred",
+    "photo": "img/foto-mvv71e4b.jpg",
+    "alt": "𝐐𝐔𝐈𝐂𝐊 𝐒𝐍𝐎𝐖𝐒𝐓𝐎𝐑𝐌 "
+   },
+   {
+    "name": "𝐊𝐀𝐑𝐌𝐀 𝐈𝐒 𝐑𝐄𝐀𝐋 ",
+    "info": "Welsh pony ",
+    "photo": "img/foto-mvv71hbz.jpg",
+    "alt": "𝐊𝐀𝐑𝐌𝐀 𝐈𝐒 𝐑𝐄𝐀𝐋 "
+   },
+   {
+    "name": "𝐑𝐎𝐒𝐄 𝐋𝐎𝐔 ",
+    "info": "Dutch Warmblood ",
+    "photo": "img/foto-mvv71j6g.jpg",
+    "alt": "𝐑𝐎𝐒𝐄 𝐋𝐎𝐔 "
+   },
+   {
+    "name": "𝐂𝐇𝐈𝐒𝐇𝐈𝐘𝐀 ",
+    "info": "Appa x Mustag",
+    "photo": "img/foto-mvv71ks5.jpg",
+    "alt": "𝐂𝐇𝐈𝐒𝐇𝐈𝐘𝐀 "
    }
   ]
  },
