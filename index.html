@@ -70,9 +70,9 @@ h1,h2,h3{text-wrap:balance}
 .ph-tools{position:absolute;left:12px;right:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:8px}
 
 /* lokality */
-.lok{display:flex;flex-wrap:wrap;gap:72px 48px}
-.lok article{position:relative;flex:1 1 500px;min-width:0;background:var(--card);border-radius:32px;padding:18px 18px 34px;display:flex;flex-direction:column;gap:24px}
-.lok .ph{height:280px}
+.lok{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,480px),1fr));gap:72px 48px;align-items:start}
+.lok article{position:relative;min-width:0;background:var(--card);border-radius:32px;padding:18px 18px 34px;display:flex;flex-direction:column;gap:24px}
+.lok .ph{aspect-ratio:16/9;height:auto;max-width:100%}
 .lok .body{padding:0 14px;display:flex;flex-direction:column;gap:14px}
 .lok h3{margin:0;font-weight:800;font-size:34px;letter-spacing:-.02em;display:flex;gap:12px;align-items:baseline}
 .lok h3 .i{color:var(--gold)}
@@ -111,9 +111,10 @@ h1,h2,h3{text-wrap:balance}
 .stack li:last-child{border-bottom:none}
 
 /* koně */
-.kone{display:flex;flex-wrap:wrap;gap:24px}
-.kone article{position:relative;flex:1 1 260px;min-width:0;background:var(--card);border-radius:28px;padding:14px 14px 24px;display:flex;flex-direction:column;gap:16px}
-.kone .ph{height:240px;border-radius:20px}
+.kone{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:24px}
+.kone article{position:relative;min-width:0;background:var(--card);border-radius:28px;padding:14px 14px 24px;display:flex;flex-direction:column;gap:16px}
+.kone .ph{aspect-ratio:4/3;height:auto;max-width:100%;border-radius:20px}
+.kone .n b{overflow-wrap:anywhere}
 .kone .n{padding:0 10px;display:flex;flex-direction:column;gap:4px}
 .kone .n b{font-weight:800;font-size:22px}
 .kone .n span{color:var(--mute);font-size:16px}
@@ -168,7 +169,7 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
 .rm.in-row{position:static;flex:none;width:30px;height:30px;font-size:17px}
 .add{display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:var(--gold-hi);background:transparent;border:1px dashed var(--gold);border-radius:12px;padding:10px 16px;min-height:44px;cursor:pointer;margin-top:12px}
 .add:hover{background:rgba(201,165,92,.12)}
-.add.block{flex:1 1 260px;min-height:120px;justify-content:center;border-radius:28px;margin-top:0}
+.add.block{min-height:120px;justify-content:center;border-radius:28px;margin-top:0;align-self:stretch}
 #editbar{position:fixed;z-index:50;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px;max-width:calc(100% - 32px)}
 #editbar .panel{background:var(--band);border:1px solid var(--gold);border-radius:20px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:0 24px 60px -18px rgba(0,0,0,.7)}
 #editbar .hint{font-size:14px;color:var(--fg2);max-width:340px;padding:0 6px}
