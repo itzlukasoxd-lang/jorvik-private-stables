@@ -173,6 +173,9 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
 #editbar .panel{background:var(--band);border:1px solid var(--gold);border-radius:20px;padding:12px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:0 24px 60px -18px rgba(0,0,0,.7)}
 #editbar .hint{font-size:14px;color:var(--fg2);max-width:340px;padding:0 6px}
 #editbar .btn{padding:12px 20px;font-size:15px;border-radius:12px}
+#editbar .clr-t{font-size:14px;font-weight:700;color:var(--gold-hi);padding:0 6px}
+#editbar .clr{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--fg2);padding:0 4px}
+#editbar input[type=color]{width:44px;height:40px;border:1px solid var(--line);border-radius:10px;background:transparent;padding:2px;cursor:pointer}
 #editbar .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold-hi);margin-right:6px}
 #toast{position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--on-gold);padding:12px 18px;border-radius:12px;font-size:15px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 20px 40px -12px rgba(0,0,0,.6)}
 @media (max-width:640px){.rm{top:-8px;right:-8px}.svc .list,.table{padding-left:22px;padding-right:22px}}
@@ -202,6 +205,49 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
   const previews = {};   // cesta -> blob: URL
 
   const clone = (o) => JSON.parse(JSON.stringify(o));
+  const DEFAULTS = {
+    labels: {
+      nav: { ustajeni: 'Ustájení', sluzby: 'Služby', klub: 'Jezdecký klub', kone: 'Naši koně', onas: 'O nás', cenik: 'Ceník' },
+      hero1: 'Ustájení', hero2: 'Ceník',
+      signupPrefix: 'Přihlášky do klubu:',
+      linksNote: 'Ceny naleznete v ceníku, naše koně v sekci Naši koně.'
+    },
+    theme: { bg: '#0B1A33', gold: '#C9A55C' }
+  };
+  function withDefaults(d) {
+    const merge = (t, s) => {
+      Object.keys(s).forEach((k) => {
+        if (t[k] == null) t[k] = clone(s[k]);
+        else if (s[k] && typeof s[k] === 'object' && !Array.isArray(s[k]) && typeof t[k] === 'object') merge(t[k], s[k]);
+      });
+      return t;
+    };
+    return merge(d, DEFAULTS);
+  }
+  function hexToHsl(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return { h: 218, s: 65, l: 12 };
+    const n = parseInt(m[1], 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+    let h = 0, s = 0;
+    if (mx !== mn) {
+      const d = mx - mn; s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60;
+    }
+    return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+  }
+  const hsl = (c, l, a) => 'hsl(' + c.h + ' ' + c.s + '% ' + Math.max(0, Math.min(100, l)) + '%' + (a ? ' / ' + a : '') + ')';
+  function applyTheme() {
+    const t = (S && S.theme) || DEFAULTS.theme, b = hexToHsl(t.bg), g = hexToHsl(t.gold), r = document.documentElement.style;
+    r.setProperty('--bg', t.bg);
+    r.setProperty('--band', hsl(b, b.l - 4));
+    r.setProperty('--card', hsl(b, b.l + 8));
+    r.setProperty('--raise', hsl(b, b.l + 14));
+    r.setProperty('--on-gold', hsl(b, Math.max(8, b.l)));
+    r.setProperty('--gold', t.gold);
+    r.setProperty('--gold-hi', hsl(g, Math.min(92, g.l + 15)));
+    r.setProperty('--line', hsl(g, g.l, '.25'));
+    r.setProperty('--line-soft', hsl(g, g.l, '.16'));
+  }
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const get = (p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), S);
   const set = (p, v) => { const ks = p.split('.'); let a = S; for (let i = 0; i < ks.length - 1; i++) a = a[ks[i]]; a[ks[ks.length - 1]] = v; };
@@ -240,15 +286,17 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
   // ---------- vykreslení ----------
   function render() {
     if (!S) return;
+    applyTheme();
     document.body.classList.toggle('editing', editing);
     const u = S.ustajeni, c = S.cenik;
     let h = '';
 
     h += '<section id="top" class="band"><div class="wrap">';
     h += '<nav class="nav" aria-label="Hlavní menu"><a class="logo" href="#top"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B1A33" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 3v8a7 7 0 0 0 14 0V3"></path></svg></span>' + T('brand', 'b') + '</a>';
-    h += '<div class="nav-links"><a href="#ustajeni">Ustájení</a><a href="#sluzby">Služby</a><a href="#klub">Jezdecký klub</a><a href="#kone">Naši koně</a><a href="#onas">O nás</a><a class="btn gold" href="#cenik">Ceník</a></div></nav>';
+    const L = (k, href, cls) => '<a' + (cls ? ' class="' + cls + '"' : '') + ' href="' + href + '" data-path="labels.' + k + '">' + esc(get('labels.' + k)) + '</a>';
+    h += '<div class="nav-links">' + L('nav.ustajeni', '#ustajeni') + L('nav.sluzby', '#sluzby') + L('nav.klub', '#klub') + L('nav.kone', '#kone') + L('nav.onas', '#onas') + L('nav.cenik', '#cenik', 'btn gold') + '</div></nav>';
     h += '<div class="hero"><div class="l">' + T('hero.kicker', 'span', 'kicker') + T('hero.title', 'h1') + '</div>';
-    h += '<div class="r">' + T('hero.text', 'p', '', 1) + '<div class="row-btns"><a class="btn gold" href="#ustajeni">Ustájení</a><a class="btn card" href="#cenik">Ceník</a></div></div></div>';
+    h += '<div class="r">' + T('hero.text', 'p', '', 1) + '<div class="row-btns">' + L('hero1', '#ustajeni', 'btn gold') + L('hero2', '#cenik', 'btn card') + '</div></div></div>';
     h += '</div></section>';
 
     h += '<section id="ustajeni" class="wrap sec"><div class="sec-head"><div class="t"><span class="num">01</span>' + T('ustajeni.title', 'h2', 'h2') + '</div>' + (show('ustajeni.intro') ? T('ustajeni.intro', 'p', '', 1).replace('<p ', '<p style="margin:0;max-width:420px;color:var(--fg2);font-size:19px" ') : '') + '</div>';
@@ -269,7 +317,7 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     h += add('sluzby.items', 'Přidat službu') + '</div></div></section>';
 
     h += '<section id="klub" class="band klub"><div class="wrap in"><div class="l"><span class="num" style="color:var(--gold)">03</span>' + T('klub.title', 'h2', 'h2') + T('klub.text', 'p', '', 1);
-    h += '<div class="notes"><strong style="color:var(--fg)">' + T('klub.age') + '</strong><span>Přihlášky do klubu: ' + T('klub.signup', 'span', '', 0).replace('<span ', '<span style="color:var(--mute)" ') + '</span><span>Ceny naleznete v <a href="#cenik">ceníku</a> · naše koně v sekci <a href="#kone">Naši koně</a></span></div></div>';
+    h += '<div class="notes"><strong style="color:var(--fg)">' + T('klub.age') + '</strong><span>' + T('labels.signupPrefix') + ' ' + T('klub.signup', 'span', '', 0).replace('<span ', '<span style="color:var(--mute)" ') + '</span>' + (show('labels.linksNote') ? T('labels.linksNote', 'span', '', 1) : '') + '</div></div>';
     h += '<div class="stack"><div class="s1" aria-hidden="true"></div><div class="s2" aria-hidden="true"></div><div class="front pop">' + T('klub.focusLabel', 'span', 'lab') + '<ul>';
     S.klub.focus.forEach((f, i) => { h += '<li style="display:flex;justify-content:space-between;align-items:center;gap:10px">' + T('klub.focus.' + i) + rm('klub.focus', i, true) + '</li>'; });
     h += '</ul>' + add('klub.focus', 'Přidat disciplínu') + '</div></div></div></section>';
@@ -321,6 +369,7 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     if (!editing) {
       h += '<div class="panel"><button type="button" class="btn gold" data-bar="edit">Upravit stránku</button></div>';
     } else {
+      h += '<div class="panel"><span class="clr-t">Barvy webu</span><label class="clr">Pozadí <input type="color" id="clr-bg" data-theme="bg" value="' + esc(S.theme.bg) + '"></label><label class="clr">Zlatá <input type="color" id="clr-gold" data-theme="gold" value="' + esc(S.theme.gold) + '"></label><button type="button" class="btn ghost" data-bar="theme-reset">Výchozí barvy</button></div>';
       h += '<div class="panel"><span class="hint">Klikni na text a přepiš ho. Fotky měníš tlačítkem na fotce, × položku odebere.</span>';
       h += '<button type="button" class="btn gold" data-bar="save"' + (saving ? ' disabled' : '') + '>' + (saving ? 'Ukládám…' : (dirty ? '<span class="dot" aria-hidden="true"></span>Uložit změny' : 'Uložit změny')) + '</button>';
       h += '<button type="button" class="btn ghost" data-bar="cancel"' + (saving ? ' disabled' : '') + '>' + (dirty ? 'Zahodit změny' : 'Hotovo') + '</button></div>';
@@ -442,15 +491,22 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     else if (a === 'restore') {
       const known = photoPaths(saved);
       draft.ustajeni.items.concat(draft.kone.items).forEach((x) => { if (x.photo && !known.has(x.photo) && !pending[x.photo]) x.photo = ''; });
-      S = draft; draft = null; editing = true; dirty = true; try { sessionStorage.removeItem(DRAFT_KEY); } catch (er) {} render(); toast('Neuložené změny obnoveny. Nezapomeň je uložit.'); }
+      S = withDefaults(draft); draft = null; editing = true; dirty = true; try { sessionStorage.removeItem(DRAFT_KEY); } catch (er) {} render(); toast('Neuložené změny obnoveny. Nezapomeň je uložit.'); }
+    else if (a === 'theme-reset') { S.theme = clone(DEFAULTS.theme); applyTheme(); dirty = true; renderBar(); }
     else if (a === 'drop') { draft = null; try { sessionStorage.removeItem(DRAFT_KEY); } catch (er) {} renderBar(); }
   });
+
+  bar.addEventListener('input', (e) => {
+    const i = e.target.closest('[data-theme]'); if (!i || !editing) return;
+    S.theme[i.dataset.theme] = i.value; applyTheme(); dirty = true;
+  });
+  bar.addEventListener('change', (e) => { if (e.target.closest('[data-theme]')) renderBar(); });
 
   // ---------- start ----------
   fetch('data/site.json', { cache: 'no-store' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((data) => {
-      S = data; saved = clone(data);
+      S = withDefaults(data); saved = clone(S);
       try { const d = sessionStorage.getItem(DRAFT_KEY); if (d && d !== JSON.stringify(saved)) draft = JSON.parse(d); else if (d) sessionStorage.removeItem(DRAFT_KEY); } catch (e) {}
       render();
     })
