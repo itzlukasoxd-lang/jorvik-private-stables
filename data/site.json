@@ -311,7 +311,8 @@
    "klub": "Jezdecký klub",
    "kone": "Naši koně",
    "onas": "O nás",
-   "cenik": "Ceník"
+   "cenik": "Ceník",
+   "prihlaska": "Přihláška"
   },
   "hero1": "Ustájení",
   "hero2": "Ceník",
@@ -321,5 +322,10 @@
  "theme": {
   "bg": "#0B1A33",
   "gold": "#C9A55C"
+ },
+ "prihlaska": {
+  "email": "jorvikprivatestables@gmail.com",
+  "contact": "jorvikprivatestables@gmail.com",
+  "fallbackText": "Zkopíruj ji a pošli nám ji e-mailem nebo na Discordu:"
  }
 }

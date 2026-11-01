@@ -20,6 +20,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:18px;line-height:1.55}
 a{color:var(--gold-hi)}a:hover{color:var(--fg)}
 h1,h2,h3{text-wrap:balance}
@@ -147,6 +148,42 @@ h1,h2,h3{text-wrap:balance}
 .incl ul{margin:0;padding:0;list-style:none;font-size:16px;color:var(--fg2)}
 .incl li{position:relative;padding:7px 0;border-top:1px solid var(--line-soft)}
 
+/* přihláška */
+.apply{display:flex;flex-wrap:wrap;gap:48px 72px;align-items:flex-start}
+.apply .t{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:18px}
+.apply .lead2{margin:0;font-size:19px;color:var(--fg2)}
+.apply .fnote{margin:0;font-size:15px;color:var(--mute);padding-top:16px;border-top:1px solid var(--line)}
+.form-card{flex:1.4 1 560px;min-width:0;background:var(--card);border-radius:32px;padding:clamp(22px,4vw,44px)}
+#apply-form{display:flex;flex-direction:column;gap:20px}
+.frow{display:flex;flex-wrap:wrap;gap:20px}
+.fld{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.flab{font-size:15px;font-weight:600;color:var(--fg2)}
+.req{color:var(--gold);margin-left:4px}
+.fin{font:inherit;font-size:17px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:13px 16px;min-height:52px;width:100%;max-width:100%}
+select.fin{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C9A55C' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+select.fin option{background:var(--card);color:var(--fg)}
+textarea.fin{min-height:120px;resize:vertical;line-height:1.5}
+.fin:focus{outline:2px solid var(--gold-hi);outline-offset:1px;border-color:transparent}
+.fin::placeholder{color:var(--mute);opacity:.75}
+.cond{display:flex;flex-direction:column;gap:20px;padding:20px;border-radius:20px;background:var(--raise)}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--fg2);cursor:pointer;line-height:1.45}
+.chk input{width:22px;height:22px;accent-color:var(--gold);flex:none;margin:1px 0 0;cursor:pointer}
+.hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.factions{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.ferr{color:var(--danger);font-size:15px}
+.fdone{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.fdone .big{font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.fdone p{margin:0;color:var(--fg2)}
+.fdone textarea{font-size:15px}
+.btn[disabled]{opacity:.6;cursor:default;transform:none}
+.opt-edit{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.opt-t{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 4px 4px 12px;border-radius:999px;background:var(--raise);font-size:14px}
+.opt-edit .add{margin-top:0}
+.hookbox{display:flex;flex-direction:column;gap:10px;padding:18px;border:1px dashed var(--gold);border-radius:18px}
+.hookbox .hk{font-size:14px;color:var(--mute)}
+body.editing .form-card .fdone{padding-top:20px;border-top:1px dashed var(--line)}
+
 footer.band .in{padding-block:72px 40px;display:flex;flex-direction:column;gap:40px;color:var(--mute)}
 footer .big{font-weight:800;font-size:clamp(36px,6vw,88px);line-height:.95;letter-spacing:-.035em;color:var(--fg)}
 footer .bot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font-size:15px;padding-top:24px;border-top:1px solid var(--line)}
@@ -208,12 +245,43 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
   const clone = (o) => JSON.parse(JSON.stringify(o));
   const DEFAULTS = {
     labels: {
-      nav: { ustajeni: 'Ustájení', sluzby: 'Služby', klub: 'Jezdecký klub', kone: 'Naši koně', onas: 'O nás', cenik: 'Ceník' },
+      nav: { ustajeni: 'Ustájení', sluzby: 'Služby', klub: 'Jezdecký klub', kone: 'Naši koně', onas: 'O nás', cenik: 'Ceník', prihlaska: 'Přihláška' },
       hero1: 'Ustájení', hero2: 'Ceník',
       signupPrefix: 'Přihlášky do klubu:',
       linksNote: 'Ceny naleznete v ceníku, naše koně v sekci Naši koně.'
     },
-    theme: { bg: '#0B1A33', gold: '#C9A55C' }
+    theme: { bg: '#0B1A33', gold: '#C9A55C' },
+    prihlaska: {
+      title: 'Přihláška',
+      intro: 'Chceš k nám ustájit koně, pronajmout si ho, jezdit v klubu nebo u nás pracovat? Vyplň přihlášku a ozveme se ti na Discordu.',
+      note: 'Vyplňuj jen RP údaje a svou Discord přezdívku. Skutečné jméno, věk ani jiné osobní údaje nepiš.',
+      fields: {
+        name: 'Jméno postavy', discord: 'Discord přezdívka', interest: 'Mám zájem o',
+        location: 'Lokalita', stabling: 'Typ ustájení', horse: 'Jméno koně', breed: 'Plemeno',
+        rental: 'Typ koně', club: 'Balíček tréninků', job: 'Pozice',
+        experience: 'Zkušenosti s RP a koňmi', message: 'Zpráva pro stáj'
+      },
+      choose: 'Vyber…',
+      anyLocation: 'Je mi to jedno',
+      interests: [
+        { label: 'Ustájení', kind: 'ustajeni' },
+        { label: 'Pronájem koně', kind: 'pronajem' },
+        { label: 'Jezdecký klub', kind: 'klub' },
+        { label: 'Trénink s trenérkou', kind: 'trenink' },
+        { label: 'Práce ve stáji', kind: 'prace' }
+      ],
+      jobs: ['Administrativa', 'Mistování', 'Práce u koní', 'Prodavač'],
+      consent: 'Souhlasím s pravidly stáje a s odesláním přihlášky na Discord stáje.',
+      submit: 'Odeslat přihlášku',
+      successTitle: 'Přihláška odeslána',
+      successText: 'Děkujeme! Ozveme se ti na Discordu.',
+      againLabel: 'Vyplnit další přihlášku',
+      fallbackTitle: 'Přihlášku je potřeba poslat ručně',
+      fallbackText: 'Zkopíruj ji a pošli nám ji na Discordu:',
+      contact: '[odkaz na Discord server]',
+      email: '',
+      webhook: ''
+    }
   };
   function withDefaults(d) {
     const merge = (t, s) => {
@@ -264,7 +332,9 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     'cenik.included': () => 'Nová položka',
     'cenik.pronajem': () => ({ title: 'Nový kůň', sub: 'popis', price: '0 JS' }),
     'cenik.pronajemExtra': () => ({ label: 'Příplatek', price: '+0 JS' }),
-    'cenik.klub': () => ({ label: 'Trénink', price: '0 JS' })
+    'cenik.klub': () => ({ label: 'Trénink', price: '0 JS' }),
+    'prihlaska.interests': () => ({ label: 'Jiné', kind: 'jine' }),
+    'prihlaska.jobs': () => 'Nová pozice'
   };
 
   // ---------- pomocníci šablon ----------
@@ -284,6 +354,156 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     return '<div class="ph">' + inner + tools + '</div>';
   }
 
+  // ---------- přihláška ----------
+  const F = (k) => 'prihlaska.fields.' + k;
+  const clip = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+  const HOOK_RE = /^https:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/api\/webhooks\/\d+\/[\w-]+$/;
+  function flab(k, id, req) {
+    const inner = T(F(k)) + (req ? '<span class="req" aria-hidden="true">*</span>' : '');
+    return editing ? '<span class="flab">' + inner + '</span>' : '<label class="flab" for="' + id + '">' + inner + '</label>';
+  }
+  function fin(k, id, opt) {
+    opt = opt || {};
+    const ph = opt.ph ? ' placeholder="' + esc(opt.ph) + '"' : '';
+    const ml = ' maxlength="' + (opt.max || 80) + '"';
+    const ctl = opt.area
+      ? '<textarea class="fin" id="' + id + '" name="' + id + '" rows="4"' + ph + ml + '></textarea>'
+      : '<input class="fin" type="text" id="' + id + '" name="' + id + '"' + ph + ml + (opt.req ? ' required' : '') + ' autocomplete="off">';
+    return '<div class="fld">' + flab(k, id, opt.req) + ctl + '</div>';
+  }
+  function optionsHtml(list) {
+    return '<option value="">' + esc(S.prihlaska.choose) + '</option>' + list.map((o) => '<option value="' + esc(o.v) + '">' + esc(o.t) + '</option>').join('');
+  }
+  function fsel(k, id, list, req) {
+    return '<div class="fld">' + flab(k, id, req) + '<select class="fin" id="' + id + '" name="' + id + '"' + (req ? ' required' : '') + '>' + optionsHtml(list) + '</select></div>';
+  }
+  const asOpts = (arr) => arr.map((t) => ({ v: t, t: t }));
+  function stablingFor(loc) {
+    const all = S.cenik.ustajeni.map((r) => r.label + ' – ' + r.price);
+    if (!loc || loc === S.prihlaska.anyLocation) return all;
+    const f = S.cenik.ustajeni.filter((r) => r.label.indexOf(loc) !== -1).map((r) => r.label + ' – ' + r.price);
+    return f.length ? f : all;
+  }
+  function optEditor(list, key, label) {
+    if (!editing) return '';
+    let h = '<div class="opt-edit"><span class="opt-t">' + esc(label) + '</span>';
+    get(list).forEach((x, i) => { h += '<span class="chip">' + T(list + '.' + i + (key ? '.' + key : '')) + rm(list, i, true) + '</span>'; });
+    return h + add(list, 'Přidat možnost') + '</div>';
+  }
+  function formSection() {
+    const P = S.prihlaska;
+    let h = '<section id="prihlaska" class="wrap sec" style="padding-bottom:150px"><div class="apply"><div class="t"><span class="num">07</span>' + T('prihlaska.title', 'h2', 'h2') + T('prihlaska.intro', 'p', 'lead2', 1) + (show('prihlaska.note') ? T('prihlaska.note', 'p', 'fnote', 1) : '');
+    if (editing) {
+      h += '<div class="hookbox"><label class="flab" for="f-mail">E-mail pro přihlášky</label><input class="fin" type="email" id="f-mail" data-bind="prihlaska.email" value="' + esc(P.email) + '" placeholder="jmeno@gmail.com" autocomplete="off" spellcheck="false"><span class="hk">Každá přihláška přijde na tento e-mail. Úplně první přihláška pošle na e-mail aktivační odkaz, na který je potřeba jednou kliknout.</span></div>';
+      h += '<div class="hookbox"><label class="flab" for="f-hook">Discord webhook (nepovinné)</label><input class="fin" type="url" id="f-hook" data-bind="prihlaska.webhook" value="' + esc(P.webhook) + '" placeholder="https://discord.com/api/webhooks/…" autocomplete="off" spellcheck="false"><span class="hk">Sem patří odkaz webhooku z Discordu. Bude ve zdrojovém kódu webu, takže když ho někdo zneužije, smaž webhook v Discordu a vlož sem nový. Bez webhooku si uchazeč přihlášku zkopíruje a pošle sám.</span></div>';
+    }
+    h += '</div><div class="form-card lift">';
+    h += '<form id="apply-form" novalidate>';
+    h += '<div class="frow">' + fin('name', 'f-name', { req: 1, ph: 'Jméno tvé postavy' }) + fin('discord', 'f-discord', { req: 1, ph: 'např. jorvik_rider', max: 40 }) + '</div>';
+    h += fsel('interest', 'f-interest', P.interests.map((x, i) => ({ v: String(i), t: x.label })), 1);
+    h += optEditor('prihlaska.interests', 'label', 'Možnosti výběru');
+    h += '<div class="cond" data-kind="ustajeni"><div class="frow">' + fsel('location', 'f-loc', asOpts(S.ustajeni.items.map((x) => x.name).concat([P.anyLocation]))) + fsel('stabling', 'f-stab', asOpts(stablingFor(''))) + '</div><div class="frow">' + fin('horse', 'f-horse') + fin('breed', 'f-breed') + '</div></div>';
+    h += '<div class="cond" data-kind="pronajem">' + fsel('rental', 'f-rent', asOpts(S.cenik.pronajem.map((r) => r.title + ' – ' + r.price))) + '</div>';
+    h += '<div class="cond" data-kind="klub">' + fsel('club', 'f-club', asOpts(S.cenik.klub.map((r) => r.label + ' – ' + r.price))) + '</div>';
+    h += '<div class="cond" data-kind="prace">' + fsel('job', 'f-job', asOpts(P.jobs)) + optEditor('prihlaska.jobs', '', 'Pozice') + '</div>';
+    h += fin('experience', 'f-exp', { area: 1, max: 1000 }) + fin('message', 'f-msg', { area: 1, max: 1000 });
+    h += editing
+      ? '<div class="chk"><input type="checkbox" disabled>' + T('prihlaska.consent') + '</div>'
+      : '<label class="chk" for="f-consent"><input type="checkbox" id="f-consent" name="f-consent" required>' + T('prihlaska.consent') + '</label>';
+    h += '<div class="hp" aria-hidden="true"><label for="f-web">Toto pole nevyplňuj</label><input type="text" id="f-web" name="web" tabindex="-1" autocomplete="off"></div>';
+    h += '<div class="factions">' + (editing ? '<span class="btn gold">' + T('prihlaska.submit') + '</span>' : '<button type="submit" class="btn gold" id="f-submit">' + esc(P.submit) + '</button>') + '<span class="ferr" id="f-err" role="alert"></span></div>';
+    h += '</form>';
+    const hid = editing ? '' : ' hidden';
+    h += '<div class="fdone" id="f-done"' + hid + '>' + (editing ? '<span class="opt-t">Po odeslání</span>' : '') + T('prihlaska.successTitle', 'span', 'big') + T('prihlaska.successText', 'p', '', 1)
+      + (editing ? '<span class="btn ghost">' + T('prihlaska.againLabel') + '</span>' : '<button type="button" class="btn ghost" data-act="form-again">' + esc(P.againLabel) + '</button>') + '</div>';
+    h += '<div class="fdone" id="f-back"' + hid + '>' + (editing ? '<span class="opt-t">Když se odeslání nepovede</span>' : '') + T('prihlaska.fallbackTitle', 'span', 'big') + '<p>' + T('prihlaska.fallbackText') + ' ' + T('prihlaska.contact', 'strong') + '</p>'
+      + '<textarea class="fin" id="f-copy" rows="8" readonly aria-label="Text přihlášky"></textarea><div class="factions"><button type="button" class="btn gold" data-act="copy-app">Zkopírovat přihlášku</button><button type="button" class="btn ghost" data-act="form-back">Zpět k formuláři</button></div></div>';
+    return h + '</div></div></section>';
+  }
+  function updateCond() {
+    const form = document.getElementById('apply-form'); if (!form) return;
+    const sel = form.querySelector('#f-interest');
+    const it = sel && sel.value !== '' ? S.prihlaska.interests[+sel.value] : null;
+    const kind = it ? it.kind : '';
+    form.querySelectorAll('.cond').forEach((g) => {
+      const on = editing || g.dataset.kind === kind;
+      g.hidden = !on;
+      g.querySelectorAll('input,select').forEach((x) => { x.disabled = !on; });
+    });
+  }
+  function fillStab(loc) {
+    const s = document.getElementById('f-stab'); if (s) s.innerHTML = optionsHtml(asOpts(stablingFor(loc)));
+  }
+  function collect(form) {
+    const P = S.prihlaska, f = P.fields;
+    const v = (id) => { const el = form.querySelector('#' + id); return el && !el.disabled ? String(el.value || '').trim() : ''; };
+    const iv = v('f-interest');
+    const it = (iv !== '' && P.interests[+iv]) || { label: '', kind: '' };
+    const rows = [[f.name, v('f-name')], [f.discord, v('f-discord')], [f.interest, it.label]];
+    if (it.kind === 'ustajeni') rows.push([f.location, v('f-loc')], [f.stabling, v('f-stab')], [f.horse, v('f-horse')], [f.breed, v('f-breed')]);
+    if (it.kind === 'pronajem') rows.push([f.rental, v('f-rent')]);
+    if (it.kind === 'klub') rows.push([f.club, v('f-club')]);
+    if (it.kind === 'prace') rows.push([f.job, v('f-job')]);
+    rows.push([f.experience, v('f-exp')], [f.message, v('f-msg')]);
+    return { kind: it.label, rows: rows.filter((r) => r[1]) };
+  }
+  const plainText = (d) => ['**' + S.prihlaska.title + ' – ' + d.kind + '**'].concat(d.rows.map((r) => r[0] + ': ' + r[1])).join('\n');
+  function payload(d) {
+    const col = parseInt(String(S.theme.gold || '').replace('#', ''), 16);
+    return {
+      username: clip(S.prihlaska.title + ' – ' + S.brand, 80),
+      allowed_mentions: { parse: [] },
+      embeds: [{
+        title: clip(S.prihlaska.title + ': ' + d.kind, 256),
+        color: isNaN(col) ? 0xC9A55C : col,
+        fields: d.rows.map((r) => ({ name: clip(r[0] || '–', 256), value: clip(r[1], 1000), inline: r[1].length <= 40 })),
+        footer: { text: 'Odesláno z webu ' + S.brand },
+        timestamp: new Date().toISOString()
+      }]
+    };
+  }
+  async function submitApp(form) {
+    const P = S.prihlaska;
+    const err = form.querySelector('#f-err'), btn = form.querySelector('#f-submit');
+    const done = document.getElementById('f-done'), back = document.getElementById('f-back');
+    err.textContent = '';
+    if (form.elements.web && form.elements.web.value) { form.hidden = true; done.hidden = false; return; }
+    if (!form.checkValidity()) { form.reportValidity(); err.textContent = 'Vyplň prosím povinná pole označená hvězdičkou.'; return; }
+    try { const last = +localStorage.getItem('jps-prihlaska') || 0; if (Date.now() - last < 60000) { err.textContent = 'Přihlášku jsi právě odeslal. Další můžeš poslat za minutu.'; return; } } catch (e) {}
+    const d = collect(form);
+    const hook = String(P.webhook || '').trim();
+    let ok = false;
+    if (HOOK_RE.test(hook)) {
+      btn.disabled = true; btn.textContent = 'Odesílám…';
+      try {
+        const r = await fetch(hook + '?wait=true', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload(d)) });
+        ok = r.ok;
+      } catch (e) { ok = false; }
+      btn.disabled = false; btn.textContent = P.submit;
+    }
+    const mail = String(P.email || '').trim();
+    if (!ok && /^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(mail)) {
+      btn.disabled = true; btn.textContent = 'Odesílám…';
+      try {
+        const body = { _subject: clip(P.title + ': ' + d.kind + ' – ' + (d.rows[0] ? d.rows[0][1] : ''), 150), _template: 'table' };
+        d.rows.forEach((r) => { body[clip(r[0] || '–', 60)] = clip(r[1], 1000); });
+        const r = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(mail), { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) });
+        const j = await r.json().catch(() => ({}));
+        ok = r.ok && String(j.success) === 'true';
+      } catch (e) { ok = false; }
+      btn.disabled = false; btn.textContent = P.submit;
+    }
+    const card = form.closest('.form-card');
+    if (ok) {
+      try { localStorage.setItem('jps-prihlaska', String(Date.now())); } catch (e) {}
+      form.reset(); updateCond(); form.hidden = true; done.hidden = false;
+    } else {
+      document.getElementById('f-copy').value = plainText(d);
+      form.hidden = true; back.hidden = false;
+    }
+    if (card && card.scrollIntoView) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
   // ---------- vykreslení ----------
   function render() {
     if (!S) return;
@@ -295,7 +515,7 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     h += '<section id="top" class="band"><div class="wrap">';
     h += '<nav class="nav" aria-label="Hlavní menu"><a class="logo" href="#top"><span class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B1A33" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 3v8a7 7 0 0 0 14 0V3"></path></svg></span>' + T('brand', 'b') + '</a>';
     const L = (k, href, cls) => '<a' + (cls ? ' class="' + cls + '"' : '') + ' href="' + href + '" data-path="labels.' + k + '">' + esc(get('labels.' + k)) + '</a>';
-    h += '<div class="nav-links">' + L('nav.ustajeni', '#ustajeni') + L('nav.sluzby', '#sluzby') + L('nav.klub', '#klub') + L('nav.kone', '#kone') + L('nav.onas', '#onas') + L('nav.cenik', '#cenik', 'btn gold') + '</div></nav>';
+    h += '<div class="nav-links">' + L('nav.ustajeni', '#ustajeni') + L('nav.sluzby', '#sluzby') + L('nav.klub', '#klub') + L('nav.kone', '#kone') + L('nav.onas', '#onas') + L('nav.cenik', '#cenik') + L('nav.prihlaska', '#prihlaska', 'btn gold') + '</div></nav>';
     h += '<div class="hero"><div class="l">' + T('hero.kicker', 'span', 'kicker') + T('hero.title', 'h1') + '</div>';
     h += '<div class="r">' + T('hero.text', 'p', '', 1) + '<div class="row-btns">' + L('hero1', '#ustajeni', 'btn gold') + L('hero2', '#cenik', 'btn card') + '</div></div></div>';
     h += '</div></section>';
@@ -334,7 +554,7 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     S.onas.paragraphs.forEach((pp, i) => { h += '<div style="position:relative">' + rm('onas.paragraphs', i) + T('onas.paragraphs.' + i, 'p', '', 1) + '</div>'; });
     h += add('onas.paragraphs', 'Přidat odstavec') + '</div></div></section>';
 
-    h += '<section id="cenik" class="wrap sec" style="padding-bottom:150px"><div class="sec-head"><div class="t"><span class="num">06</span>' + T('cenik.title', 'h2', 'h2') + '</div></div>';
+    h += '<section id="cenik" class="wrap sec"><div class="sec-head"><div class="t"><span class="num">06</span>' + T('cenik.title', 'h2', 'h2') + '</div></div>';
     h += T('cenik.ustajeniTitle', 'h3', 'h3') + '<div class="grid2"><div class="table lift" style="flex:3 1 620px;min-width:0">';
     c.ustajeni.forEach((r, i) => { h += '<div class="tr">' + T('cenik.ustajeni.' + i + '.label') + '<span style="display:flex;gap:10px;align-items:center">' + T('cenik.ustajeni.' + i + '.price', 'strong', 'p') + rm('cenik.ustajeni', i, true) + '</span></div>'; });
     h += add('cenik.ustajeni', 'Přidat řádek') + '</div><div style="flex:2 1 380px;min-width:0;display:flex;flex-direction:column;gap:20px"><div class="mods lift">';
@@ -353,9 +573,12 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     c.klub.forEach((r, i) => { const p = 'cenik.klub.' + i; h += '<div class="tr">' + T(p + '.label') + '<span style="display:flex;gap:10px;align-items:center">' + T(p + '.price', 'strong', 'p') + rm('cenik.klub', i, true) + '</span></div>'; });
     h += add('cenik.klub', 'Přidat řádek') + '</div></div></div></section>';
 
+    h += formSection();
+
     h += '<footer class="band"><div class="wrap in"><div class="big">' + esc(S.brand) + '</div><div class="bot">' + T('footer.places') + T('footer.note') + '</div></div></footer>';
 
     app.innerHTML = h;
+    updateCond();
     if (editing) app.querySelectorAll('[data-path]').forEach((el) => { el.contentEditable = 'true'; el.spellcheck = true; });
     renderBar();
   }
@@ -462,8 +685,30 @@ body.editing [data-path]:empty::before{content:"Napiš text…";color:var(--mute
     else if (act === 'add') { get(b.dataset.list).push(NEW[b.dataset.list]()); markDirty(); render(); }
     else if (act === 'photo') { photoTarget = b.dataset.target; fileIn.click(); }
     else if (act === 'photo-del') { set(b.dataset.target + '.photo', ''); markDirty(); render(); }
+    else if (act === 'form-again' || act === 'form-back') {
+      if (editing) return;
+      document.getElementById('f-done').hidden = true; document.getElementById('f-back').hidden = true;
+      document.getElementById('apply-form').hidden = false;
+    }
+    else if (act === 'copy-app') {
+      const ta = document.getElementById('f-copy');
+      const fallback = () => { ta.focus(); ta.select(); toast('Text je označený, zkopíruj ho klávesami Ctrl + C.'); };
+      try { navigator.clipboard.writeText(ta.value).then(() => toast('Zkopírováno. Teď přihlášku vlož na Discord.'), fallback); } catch (er) { fallback(); }
+    }
+  });
+  app.addEventListener('change', (e) => {
+    if (e.target.id === 'f-interest') updateCond();
+    else if (e.target.id === 'f-loc') fillStab(e.target.value);
+  });
+  app.addEventListener('submit', (e) => {
+    if (e.target.id !== 'apply-form') return;
+    e.preventDefault();
+    if (editing) { toast('V režimu úprav se přihláška neodesílá.'); return; }
+    submitApp(e.target);
   });
   app.addEventListener('input', (e) => {
+    const bnd = e.target.closest && e.target.closest('[data-bind]');
+    if (bnd) { if (editing) { set(bnd.dataset.bind, bnd.value.trim()); markDirty(); } return; }
     const el = e.target.closest('[data-path]');
     if (!el || !editing) return;
     set(el.dataset.path, el.innerText.replace(/ /g, ' ').replace(/\n+$/, ''));
